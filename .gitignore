@@ -1,0 +1,41 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Local-only denylist additions (see tools/README.md) — never commit this,
+# it can accumulate real names/domains you've personally blocklisted.
+tools/denylist.local.txt
+
+# ---------------------------------------------------------------------------
+# digests/ — run history from real, live-connected runs.
+#
+# Once you connect a real CRM and run this suite against real people, every
+# file this folder produces contains real names, real emails, and real
+# outreach content for actual contacts. That is not synthetic data and it
+# should not be committed to a repository, especially not a public one.
+#
+# If you're running this for real: gitignore your own digests. The rule
+# below does exactly that, with a carve-out for the synthetic worked example
+# shipped in this repo (EXAMPLE-*.md), which contains no real people and is
+# meant to be version-controlled.
+# ---------------------------------------------------------------------------
+digests/*
+!digests/EXAMPLE-*.md

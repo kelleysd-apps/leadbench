@@ -1,0 +1,60 @@
+# denylist.txt — regex patterns for tools/leakscan.py
+#
+# THIS FILE IS PUBLIC. It ships in a public repo, so it may contain ONLY
+# structural, non-identifying regex patterns — patterns that describe the
+# SHAPE of sensitive data (a UUID, an email address, a secret key format).
+# It must never contain a literal identifier: no real names, no real
+# domains, no real project refs, no real short-URL codes, no product
+# codenames, no market names. A literal value placed in this file is not
+# "denylisted" — it is published, to everyone who clones or browses this
+# repo. If you are unsure whether an entry is a shape or a literal, treat
+# it as a literal and keep it out.
+#
+# Real, literal identifiers you personally want to scan for (your name,
+# your domains, your project refs, your live URLs, a target-market roster,
+# etc.) belong in tools/denylist.local.txt instead. That file is
+# gitignored — see tools/README.md — and is merged with this one at scan
+# time, so local detection is unaffected by keeping this file structural.
+#
+# One pattern per line. Lines starting with `#` are comments. Blank lines are
+# ignored. Section headers are comment lines starting with `## `.
+#
+# Patterns are matched with re.search (case-sensitive) against each line of
+# each scanned file, unless the pattern itself embeds an inline flag like
+# (?i). Keep patterns specific enough to avoid excessive false positives,
+# but err toward over-matching — a false positive costs a human a few
+# seconds; a false negative ships a real leak.
+
+## Infra identifiers (shapes only)
+# Notion-style UUID (8-4-4-4-12 hex), e.g. page/block/collection IDs
+[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}
+# Bare 32-hex Notion ID (same UUID with dashes stripped)
+\b[0-9a-fA-F]{32}\b
+# Notion collection URI
+collection://\S+
+# Supabase project ref URL shape, e.g. https://abcdefghijklmnopqrst.supabase.co
+# — the shape only; never add a real project ref as a literal here.
+https://[a-z0-9]{20}\.supabase\.co
+# Bare 20-char Supabase project ref (no surrounding URL)
+\b[a-z0-9]{20}\b
+
+## Absolute paths
+/Users/[a-zA-Z0-9_.-]+
+~/Claude/Scheduled
+
+## Live URL shapes
+# Google Forms short-link shape — the shape only; never add a real short
+# code as a literal here.
+forms\.gle/\S+
+
+## Generic PII shapes
+# Any email address
+[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+# .edu addresses/domains generically — names no institution
+\b[A-Za-z0-9.-]+\.edu\b
+
+## Secrets
+sk-[A-Za-z0-9]{20,}
+Bearer [A-Za-z0-9._-]{20,}
+AKIA[0-9A-Z]{16}
+(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*['"][^'"]{8,}

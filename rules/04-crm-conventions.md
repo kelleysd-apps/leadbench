@@ -36,11 +36,14 @@ Specifically:
 4. Only create a new Contact if it genuinely doesn't exist anywhere.
 5. The same rule applies to Companies (`<CRM_COMPANIES_DB>`).
 
-**Why this rule exists:** if an agent extracts names from a synthesis document without first
-checking the existing CRM, it creates duplicate Contacts. The original record is usually the
-richer one — accurate Status, already linked into other departments' pipelines — so a
-duplicate doesn't just clutter the CRM, someone has to find it and reverse it by hand. The
-cost of a search is zero; the cost of a duplicate is real cleanup work every time.
+**Why this rule exists:** this happened, during an early build of this pattern. An agent
+extracted names from a synthesis document and created Contact records without first searching
+the CRM. It produced duplicates, and someone had to find them and reverse them by hand. The
+original record is usually the richer one — accurate Status, already linked into other
+departments' pipelines — so a duplicate doesn't just clutter the CRM, it costs real cleanup
+work to undo. The pre-flight search above — check first, enrich if found, create only if
+genuinely new — is what would have prevented it. The cost of a search is zero; the cost of a
+duplicate is real.
 
 ## CRM — operational hygiene
 
